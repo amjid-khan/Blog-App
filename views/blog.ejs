@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("partials/head") -%>
+    <title>Blog</title>
+    <style>
+      /* Container styling */
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 0 15px;
+      }
+
+      /* Centered title */
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: 700;
+        font-size: 2.5rem;
+        color: #333;
+      }
+
+      /* Wrapper for image and text */
+      .content-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      /* Blog image styling */
+      .blog-image {
+        max-width: 600px;
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Blog body paragraph styling */
+      .blog-body {
+        max-width: 800px;
+        width: 100%;
+        font-size: 1.125rem;
+        line-height: 1.6;
+        color: #555;
+        text-align: left;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        .blog-image {
+          height: 250px;
+        }
+
+        .blog-body {
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include("partials/nav") -%>
+    <div class="container">
+      <h1><%= blog.title %></h1>
+      <div class="content-wrapper">
+        <img
+          src="<%= blog.coverImageURL %>"
+          alt="<%= blog.title %>"
+          class="blog-image"
+        />
+      </div>
+      <p class="blog-body"><%= blog.body %></p>
+    </div>
+    <%- include("partials/script") -%>
+  </body>
+</html>
