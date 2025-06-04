@@ -1,51 +1,62 @@
-import express, { urlencoded } from "express"
-import path from "path"
-import dotenv from "dotenv"
-import router from "./routes/user.js"
-import connectDB from "./DB/connectdb.js"
-import cookieParser from "cookie-parser"
-import checkForAuth from "./middlewares/auth.js"
-import blogRouter from "./routes/blog.js"
+//  Import Required Modules
+import express, { urlencoded } from "express";
+import path from "path";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
-const app = express()
+//  Import Local Files
+import router from "./routes/user.js";
+import blogRouter from "./routes/blog.js";
+import connectDB from "./DB/connectdb.js";
+import checkForAuth from "./middlewares/auth.js";
+import Blog from "./models/blog.js";
 
+//  Initialize Express App
+const app = express();
 
+//  Load .env Configuration
+dotenv.config();
 
+//  Middleware Setup
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.static(path.resolve("./public")));
 
-dotenv.config()
+//  Auth Middleware (Custom)
+app.use(checkForAuth("token"));
 
-
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-
-app.use(cookieParser())
-app.use(checkForAuth("token"))
+// Make Logged-in User Available in All EJS Templates
 app.use((req, res, next) => {
-    res.locals.user = req.user;  // yeh line zaroori hai
+    res.locals.user = req.user;
     next();
 });
 
+// ✅ Routes Setup
+app.use("/user", router);
+app.use("/blog", blogRouter);
 
-app.use("/user", router)
-app.use("/blog", blogRouter)
+// ✅ EJS Template Engine Configuration
+app.set("view engine", "ejs");
+app.set("views", path.resolve("./views"));
 
-app.set("view engine", "ejs")
-app.set("views", path.resolve("./views"))
-
-app.get("/", (req, res) => {
+// ✅ Home Route
+app.get("/", async (req, res) => {
+    const allBlogs = await Blog.find({});
     res.render("home", {
-        user: req.user
-    })
-})
+        user: req.user,
+        blogs: allBlogs,
+    });
+});
 
-// connect mongodb
+// ✅ Connect to MongoDB and Start Server
 connectDB()
     .then(() => {
-        console.log("MongoDB Connet successfully")
+        console.log("✅ MongoDB Connected Successfully");
         app.listen(process.env.PORT, () => {
-            console.log(`Server is ready on port : ${process.env.PORT}`);
+            console.log(`🚀 Server is running on port: ${process.env.PORT}`);
         });
     })
     .catch((err) => {
-        console.error("Database connection failed:", err);
+        console.error("❌ Database Connection Failed:", err);
     });

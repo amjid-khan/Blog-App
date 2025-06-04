@@ -1,6 +1,7 @@
 import express from "express"
 import multer from "multer"
 import path from "path"
+import Blog from "../models/blog.js"
 const blogRouter = express.Router()
 
 const storage = multer.diskStorage({
@@ -22,10 +23,19 @@ blogRouter.get("/add-new", (req, res) => {
     })
 })
 
-blogRouter.post("/add-new", upload.single("coverImage"), (req, res) => {
-    console.log(req.body)
-    console.log(req.file)
-    return res.redirect("/",)
+blogRouter.post("/add-new", upload.single("coverImage"), async (req, res) => {
+    const { title, body } = req.body
+    const coverImageURL = `/upload/${req.file.filename}`;
+    console.log("File path", coverImageURL);
+
+    const blog = await Blog.create({
+        title,
+        body,
+        createdBy: req.user._id,
+        coverImageURL: coverImageURL
+    })
+    return res.redirect("/")
+    // return res.redirect(`/blog/${blog._id}`)
 })
 
 
