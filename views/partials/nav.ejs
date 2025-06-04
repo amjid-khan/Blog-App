@@ -19,7 +19,7 @@
         </li>
         <% if (locals.user) { %>
         <li class="nav-item">
-          <a class="nav-link" href="#">Add Blog</a>
+          <a class="nav-link" href="/blog/add-new">Add Blog</a>
         </li>
 
         <li class="nav-item dropdown">
@@ -30,12 +30,13 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            Amjid Khan
+            <%= user.fullName %>
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="/user/logout">Logout</a></li>
           </ul>
         </li>
+
         <% } else { %>
         <li class="nav-item">
           <a class="nav-link" href="/user/signup">Create Account</a>

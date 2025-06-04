@@ -5,17 +5,28 @@ import router from "./routes/user.js"
 import connectDB from "./DB/connectdb.js"
 import cookieParser from "cookie-parser"
 import checkForAuth from "./middlewares/auth.js"
+import blogRouter from "./routes/blog.js"
+
+const app = express()
+
+
 
 
 dotenv.config()
 
-const app = express()
 
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
 
-app.use("/user", router)
 app.use(cookieParser())
 app.use(checkForAuth("token"))
+app.use((req, res, next) => {
+    res.locals.user = req.user;  // yeh line zaroori hai
+    next();
+});
+
+
+app.use("/user", router)
+app.use("/blog", blogRouter)
 
 app.set("view engine", "ejs")
 app.set("views", path.resolve("./views"))

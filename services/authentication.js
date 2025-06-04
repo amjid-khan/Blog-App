@@ -8,7 +8,8 @@ function createToken(user) {
         _id: user.id,
         email: user.email,
         profileImageURL: user.profileImageURL,
-        role: user.role
+        role: user.role,
+        fullName: user.fullName
     }
     const token = JWT.sign(payload, secret)
     return token

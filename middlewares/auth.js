@@ -5,14 +5,18 @@ function checkForAuth(cookieName) {
         const tokenValue = req.cookies[cookieName];
 
         if (!tokenValue) {
-            next()
+            return next();
         }
+
         try {
-            const userPayload = validateToken(tokenValue)
-            req.user = userPayload
-            return next()
-        } catch (error) { }
-        return next()
-    }
+            const userPayload = validateToken(tokenValue);
+            req.user = userPayload;
+            return next();
+        } catch (error) {
+        }
+
+        return next();
+    };
 }
-export default checkForAuth
+
+export default checkForAuth;
