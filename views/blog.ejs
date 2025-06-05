@@ -2,103 +2,219 @@
 <html lang="en">
   <head>
     <%- include("partials/head") -%>
-    <title>Blog</title>
+    <title><%= blog.title %> | Blog</title>
     <style>
-      /* Container styling */
-      .container {
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 0 15px;
-      }
-
-      /* Centered title */
-      h1 {
-        text-align: center;
-        margin-bottom: 20px;
+      body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        font-weight: 700;
-        font-size: 2.5rem;
+        background-color: #f0f2f5;
         color: #333;
+        margin: 0;
+        padding: 0;
       }
 
-      /* Wrapper for image and text */
-      .content-wrapper {
+      .post-container {
+        max-width: 860px;
+        margin: 60px auto;
+        padding: 40px 30px;
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      }
+
+      .post-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        text-align: center;
+        color: #212529;
+        margin-bottom: 20px;
+      }
+
+      .post-author {
         display: flex;
-        flex-direction: column;
         align-items: center;
-        gap: 20px;
+        gap: 14px;
+        justify-content: center;
+        margin-bottom: 30px;
       }
 
-      /* Blog image styling */
-      .blog-image {
-        max-width: 600px;
-        width: 100%;
-        height: 400px;
+      .post-author img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
         object-fit: cover;
-        object-position: center;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border: 2px solid #0d6efd;
+        box-shadow: 0 0 8px rgba(13, 110, 253, 0.3);
       }
 
-      /* Blog body paragraph styling */
-      .blog-body {
-        max-width: 800px;
+      .post-author span {
+        font-weight: 600;
+        color: #0d6efd;
+        font-size: 1.1rem;
+        user-select: none;
+      }
+
+      .post-image {
         width: 100%;
-        font-size: 1.125rem;
-        line-height: 1.6;
-        color: #555;
-        text-align: left;
+        height: 600px;
+        object-fit: cover;
+        border-radius: 14px;
+        margin: 25px 0 35px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
       }
 
-      /* Responsive adjustments */
+      .post-image:hover {
+        transform: scale(1.015);
+      }
+
+      .post-body {
+        font-size: 1.2rem;
+        line-height: 1.9;
+        color: #444;
+        white-space: pre-line;
+        margin-bottom: 40px;
+      }
+
+      .comments-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        border-top: 1px solid #ddd;
+        padding-top: 30px;
+        color: #222;
+      }
+
+      .comment-form input {
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 1rem;
+        border-radius: 10px;
+        border: 1.8px solid #ccc;
+        margin-bottom: 15px;
+        transition: border-color 0.3s ease;
+      }
+
+      .comment-form input:focus {
+        border-color: #0d6efd;
+        outline: none;
+        box-shadow: 0 0 8px rgba(13, 110, 253, 0.3);
+      }
+
+      .comment-form button {
+        padding: 12px 30px;
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: background-color 0.3s ease;
+      }
+
+      .comment-form button:hover {
+        background-color: #0a58ca;
+      }
+
+      .comment {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        margin-top: 25px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 18px;
+      }
+
+      .comment img {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1.5px solid #0d6efd;
+        box-shadow: 0 0 6px rgba(13, 110, 253, 0.3);
+      }
+
+      .comment-content {
+        flex: 1;
+      }
+
+      .comment-author {
+        font-weight: 700;
+        color: #0d6efd;
+        margin-bottom: 6px;
+      }
+
+      .comment-content div {
+        color: #555;
+        font-size: 1rem;
+        line-height: 1.6;
+        white-space: pre-line;
+      }
+
       @media (max-width: 600px) {
-        h1 {
+        .post-title {
           font-size: 1.8rem;
         }
 
-        .blog-image {
-          height: 250px;
+        .post-image {
+          height: 220px;
         }
 
-        .blog-body {
-          font-size: 1rem;
+        .post-container {
+          padding: 25px 18px;
         }
       }
     </style>
   </head>
   <body>
+    <!-- Navbar removed as per your request -->
     <%- include("partials/nav") -%>
-    <div class="container">
-      <h1><%= blog.title %></h1>
-      <div class="content-wrapper">
-        <img
-          src="<%= blog.coverImageURL %>"
-          alt="<%= blog.title %>"
-          class="blog-image"
-        />
+
+    <div class="post-container">
+      <div class="post-author">
+        <img src="<%= blog.createdBy.profileImage %>" alt="Author" />
+        <span><%= blog.createdBy.fullName %></span>
       </div>
-      <p class="blog-body"><%= blog.body %></p>
-    </div>
-    <div class="container mt-4">
-      <img src="<%= blog.createdBy.profileImage %>" alt="" width="60px" />
-      <%= blog.createdBy.fullName %>
-    </div>
-    <div class="container mt-3">
-      <h1>Comments</h1>
-      <% if (locals.user) { %>
-      <form action="/blog/comment/<%= blog._id %>" method="post">
-        <div class="mb-3">
+      <h6 class="post-title"><%= blog.title %></h6>
+
+      <img
+        src="<%= blog.coverImageURL %>"
+        alt="<%= blog.title %>"
+        class="post-image"
+      />
+
+      <p class="post-body"><%= blog.body %></p>
+
+      <div class="comment-section">
+        <h2 class="comments-title">Comments (<%= comments.length %>)</h2>
+
+        <% if (locals.user) { %>
+        <form
+          action="/blog/comment/<%= blog._id %>"
+          method="post"
+          class="comment-form"
+        >
           <input
             type="text"
             name="content"
-            placeholder="Enter your comment"
-            style="width: 90%"
+            placeholder="Add your comment..."
+            required
           />
-          <button type="submit" class="btn btn-primary">Add</button>
+          <button type="submit">Post Comment</button>
+        </form>
+        <% } %> <% comments.forEach(comment => { %> <% if (comment.createdBy) {
+        %>
+        <div class="comment">
+          <img src="<%= comment.createdBy.profileImage %>" alt="User" />
+          <div class="comment-content">
+            <div class="comment-author"><%= comment.createdBy.fullName %></div>
+            <div><%= comment.content %></div>
+          </div>
         </div>
-      </form>
-      <% } %>
+        <% } %> <% }) %>
+      </div>
     </div>
+
     <%- include("partials/script") -%>
   </body>
 </html>

@@ -1,6 +1,79 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Blog</a>
+<style>
+  .custom-navbar-height {
+    height: 80px;
+    background: linear-gradient(to right, #0d6efd, #6610f2);
+    border-radius: 0 0 16px 16px;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+
+  .navbar-brand {
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: #fff !important;
+    letter-spacing: 0.5px;
+  }
+
+  .navbar-nav .nav-link {
+    color: #f8f9fa !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-nav .nav-link:hover,
+  .navbar-nav .nav-link.active {
+    color: #ffc107 !important;
+    transform: translateY(-1px);
+  }
+
+  .user-name {
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-left: 4px;
+  }
+
+  .navbar-toggler {
+    border: none;
+    padding: 6px 10px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+  }
+
+  .navbar-toggler-icon {
+    filter: brightness(0) invert(1);
+  }
+
+  .dropdown-menu {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .dropdown-menu a:hover {
+    background-color: #f8f9fa;
+    color: #0d6efd;
+  }
+
+  @media (max-width: 991.98px) {
+    .navbar-nav {
+      gap: 1rem;
+      padding-top: 1rem;
+    }
+
+    .custom-navbar-height {
+      padding: 1rem;
+      height: auto;
+    }
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg shadow-sm custom-navbar-height">
+  <div class="container">
+    <a class="navbar-brand fw-bold fs-3 text-white" href="/">Blog</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -12,31 +85,38 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-4">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
         <% if (locals.user) { %>
         <li class="nav-item">
           <a class="nav-link" href="/blog/add-new">Add Blog</a>
         </li>
-
         <li class="nav-item dropdown">
           <a
-            class="nav-link dropdown-toggle"
+            class="nav-link dropdown-toggle d-flex align-items-center"
             href="#"
             role="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <%= user.fullName %>
+            <img
+              src="<%= user.profileImage || '/images/default.png' %>"
+              alt="Profile"
+              class="rounded-circle me-2"
+              width="36"
+              height="36"
+              style="object-fit: cover; border: 2px solid #ffc107"
+            />
+            <span class="user-name"><%= user.fullName %></span>
           </a>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="/user/logout">Logout</a></li>
           </ul>
         </li>
-
         <% } else { %>
         <li class="nav-item">
           <a class="nav-link" href="/user/signup">Create Account</a>
@@ -49,9 +129,3 @@
     </div>
   </div>
 </nav>
-
-<% if(locals.error) { %>
-<div class="container mt-4">
-  <div class="alert alert-danger" role="alert"><%= locals.error %></div>
-</div>
-<% } %>

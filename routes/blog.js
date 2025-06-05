@@ -28,11 +28,13 @@ blogRouter.get("/add-new", (req, res) => {
 
 blogRouter.get("/:id", async (req, res) => {
     const blog = await Blog.findById(req.params.id).populate("createdBy");
+    const comments = await Comment.find({ blogId: req.params.id }).populate("createdBy")
+    console.log("comments", comments)
     if (!blog) return res.status(404).send("Blog not found");
-
     res.render("blog", {
         user: req.user,
-        blog
+        blog,
+        comments
     });
 });
 
@@ -56,7 +58,7 @@ blogRouter.post("/comment/:blogId", async (req, res) => {
     await Comment.create({
         content: req.body.content,
         blogId: req.params.blogId,
-        createdBy: req.user.id
+        createdBy: req.user._id
     })
     return res.redirect(`/blog/${req.params.blogId}`)
 })

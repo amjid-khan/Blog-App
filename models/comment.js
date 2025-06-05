@@ -11,7 +11,7 @@ const commentSchema = new mongoose.Schema({
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user"
+        ref: "User"
     }
 }, { timestamps: true })
 
