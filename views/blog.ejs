@@ -79,6 +79,26 @@
       </div>
       <p class="blog-body"><%= blog.body %></p>
     </div>
+    <div class="container mt-4">
+      <img src="<%= blog.createdBy.profileImage %>" alt="" width="60px" />
+      <%= blog.createdBy.fullName %>
+    </div>
+    <div class="container mt-3">
+      <h1>Comments</h1>
+      <% if (locals.user) { %>
+      <form action="/blog/comment/<%= blog._id %>" method="post">
+        <div class="mb-3">
+          <input
+            type="text"
+            name="content"
+            placeholder="Enter your comment"
+            style="width: 90%"
+          />
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </form>
+      <% } %>
+    </div>
     <%- include("partials/script") -%>
   </body>
 </html>

@@ -2,6 +2,7 @@ import express from "express"
 import multer from "multer"
 import path from "path"
 import Blog from "../models/blog.js"
+import Comment from "../models/comment.js"
 const blogRouter = express.Router()
 
 const storage = multer.diskStorage({
@@ -26,7 +27,7 @@ blogRouter.get("/add-new", (req, res) => {
 // routes/blog.js
 
 blogRouter.get("/:id", async (req, res) => {
-    const blog = await Blog.findById(req.params.id);
+    const blog = await Blog.findById(req.params.id).populate("createdBy");
     if (!blog) return res.status(404).send("Blog not found");
 
     res.render("blog", {
@@ -49,6 +50,15 @@ blogRouter.post("/add-new", upload.single("coverImage"), async (req, res) => {
     })
     // return res.redirect("/")
     return res.redirect(`/blog/${blog._id}`)
+})
+
+blogRouter.post("/comment/:blogId", async (req, res) => {
+    await Comment.create({
+        content: req.body.content,
+        blogId: req.params.blogId,
+        createdBy: req.user.id
+    })
+    return res.redirect(`/blog/${req.params.blogId}`)
 })
 
 
